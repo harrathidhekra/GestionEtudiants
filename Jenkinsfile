@@ -39,6 +39,15 @@ pipeline {
                 bat 'mvn -B package'
             }
         }
+
+        stage('Deploy') {
+            steps {
+                bat '''
+                if not exist "C:\\Tomcat\\webapps" exit /b 1
+                copy /Y "target\\GestionEtudiants.war" "C:\\Tomcat\\webapps\\GestionEtudiants.war"
+                '''
+            }
+        }
     }
 
     post {

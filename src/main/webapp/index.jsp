@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des étudiants</title>
+    <title>Gestion des etudiants</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,7 +25,7 @@
 </head>
 <body>
     <div class="carte">
-        <h1>Gestion des étudiants</h1>
+        <h1>Gestion des etudiants</h1>
         <p>Bienvenue dans notre application Java Web.</p>
         <p>Ce projet utilise Maven, Git, GitHub et Jenkins.</p>
     </div>
