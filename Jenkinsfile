@@ -34,6 +34,19 @@ pipeline {
             }
         }
 
+stage('SonarQube Analysis') {
+    steps {
+        withSonarQubeEnv('SonarQubeCloud') {
+            bat '''
+                mvn -B sonar:sonar ^
+                -Dsonar.organization=harrathidhekra ^
+                -Dsonar.projectKey=harrathidhekra_GestionEtudiants
+            '''
+        }
+    }
+}
+
+
         stage('Package') {
             steps {
                 bat 'mvn -B package'
