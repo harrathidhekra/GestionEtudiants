@@ -4,18 +4,33 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistiques des étudiants</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            text-align: center;
-            padding: 30px;
+            background: #F5F3FF;
+            margin: 0;
+            padding: 40px 20px;
+            color: #333;
         }
+
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: auto;
+            text-align: center;
         }
+
+        h1 {
+            color: #5B21B6;
+            margin-bottom: 35px;
+        }
+
         .cartes {
             display: flex;
             justify-content: center;
@@ -23,28 +38,58 @@
             gap: 20px;
             margin: 30px 0;
         }
+
         .carte {
             background: white;
-            padding: 25px;
-            width: 150px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px #ddd;
+            padding: 25px 20px;
+            width: 190px;
+            border-radius: 12px;
+            border: 1px solid #E9DFFF;
+            box-shadow: 0 4px 12px rgba(91, 33, 182, 0.08);
+            transition: transform 0.2s;
         }
+
+        .carte:hover {
+            transform: translateY(-4px);
+        }
+
+        .carte h3 {
+            color: #6B5B85;
+            font-size: 16px;
+            margin-top: 0;
+        }
+
         .valeur {
-            font-size: 28px;
+            font-size: 30px;
             font-weight: bold;
-            color: #2563eb;
+            color: #7C3AED;
+            margin-top: 15px;
         }
-        a {
-            color: #2563eb;
+
+        .retour {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 22px;
+            background: #7C3AED;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            transition: background 0.2s;
+        }
+
+        .retour:hover {
+            background: #5B21B6;
         }
     </style>
 </head>
+
 <body>
 <div class="container">
+
     <h1>Statistiques des étudiants</h1>
 
     <div class="cartes">
+
         <div class="carte">
             <h3>Total</h3>
             <div class="valeur">${total}</div>
@@ -64,11 +109,14 @@
             <h3>Moyenne générale</h3>
             <div class="valeur">${moyenne}</div>
         </div>
+
     </div>
 
-    <a href="${pageContext.request.contextPath}/etudiants">
+    <a class="retour"
+       href="${pageContext.request.contextPath}/etudiants">
         Retour à la liste des étudiants
     </a>
+
 </div>
 </body>
 </html>

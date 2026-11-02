@@ -15,72 +15,119 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Modifier un étudiant</title>
+
     <style>
+        * { box-sizing: border-box; }
+
         body {
             font-family: Arial, sans-serif;
-            background: #f2f4f8;
-            margin: 40px;
+            background: #F5F3FF;
+            margin: 0;
+            padding: 40px 20px;
+            color: #312E3F;
         }
 
         .form-container {
             background: white;
-            padding: 25px;
-            margin: auto;
-            max-width: 600px;
-            border-radius: 8px;
+            padding: 35px;
+            margin: 30px auto;
+            max-width: 550px;
+            border-radius: 16px;
+            border: 1px solid #E9DFFF;
+            box-shadow: 0 5px 20px rgba(91, 33, 182, 0.08);
+        }
+
+        h1 {
+            color: #5B21B6;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: bold;
         }
 
         input {
-            width: 95%;
-            padding: 10px;
-            margin: 8px 0 15px;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D8C8F5;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #7C3AED;
         }
 
         button {
-            background: #263b63;
+            width: 100%;
+            margin-top: 25px;
+            padding: 13px;
+            background: #7C3AED;
             color: white;
-            padding: 12px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
         }
+
+        button:hover { background: #5B21B6; }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #6D28D9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover { text-decoration: underline; }
     </style>
 </head>
+
 <body>
 
 <div class="form-container">
+
     <h1>Modifier un étudiant</h1>
 
     <form action="<%= request.getContextPath() %>/modifier" method="post">
 
         <input type="hidden" name="id" value="<%= e.getId() %>">
 
-        <label>Nom :</label>
-        <input type="text" name="nom"
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom"
                value="<%= e.getNom() %>" required>
 
-        <label>Prénom :</label>
-        <input type="text" name="prenom"
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" name="prenom"
                value="<%= e.getPrenom() %>" required>
 
-        <label>Email :</label>
-        <input type="email" name="email"
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email"
                value="<%= e.getEmail() %>" required>
 
-        <label>Note (0 - 20) :</label>
-        <input type="number" name="note"
+        <label for="note">Note (/20)</label>
+        <input type="number" id="note" name="note"
                value="<%= e.getNote() %>"
                min="0" max="20" step="0.01" required>
 
         <button type="submit">Enregistrer les modifications</button>
+
     </form>
 
-    <p>
-        <a href="<%= request.getContextPath() %>/etudiants">
-            Retour à la liste
-        </a>
-    </p>
+    <a class="back-link"
+       href="<%= request.getContextPath() %>/etudiants">
+        ← Retour à la liste des étudiants
+    </a>
+
 </div>
 
 </body>

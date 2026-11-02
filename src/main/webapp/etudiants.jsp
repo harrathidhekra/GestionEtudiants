@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="tn.devops.Etudiant" %>
@@ -7,117 +6,171 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Gestion des étudiants</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Liste des étudiants</title>
 
     <style>
+        * { box-sizing: border-box; }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f4f8;
-            margin: 40px;
+            background: #F5F3FF;
+            margin: 0;
+            padding: 40px 20px;
+            color: #312E3F;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
         }
 
         h1 {
-            color: #263b63;
+            color: #5B21B6;
             text-align: center;
+            margin-bottom: 30px;
         }
 
-        .form-container {
-            background: white;
-            padding: 20px;
-            margin: 25px auto;
-            max-width: 600px;
+        .top-links {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .link-button {
+            display: inline-block;
+            background: #7C3AED;
+            color: white;
+            padding: 12px 18px;
             border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
         }
 
-        input {
-            width: 95%;
-            padding: 10px;
-            margin: 8px 0 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .link-button:hover { background: #5B21B6; }
+
+        .search-container {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #E9DFFF;
+            box-shadow: 0 5px 20px rgba(91, 33, 182, 0.06);
+            margin-bottom: 25px;
+        }
+
+        .search-container form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 12px;
+            border: 1px solid #D8C8F5;
+            border-radius: 8px;
+            font-size: 15px;
         }
 
         button {
-            background-color: #263b63;
+            background: #7C3AED;
             color: white;
-            padding: 12px 20px;
+            padding: 12px 18px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover { background: #5B21B6; }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(91, 33, 182, 0.06);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            margin-top: 25px;
         }
 
         th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            padding: 14px 12px;
             text-align: center;
+            border-bottom: 1px solid #EEE8F8;
         }
 
         th {
-            background-color: #263b63;
+            background: #7C3AED;
             color: white;
         }
 
+        tr:hover { background: #FAF8FF; }
+
+        .edit-link {
+            color: #6D28D9;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+
+        .delete-button {
+            background: #DC2626;
+            padding: 8px 12px;
+        }
+
+        .delete-button:hover { background: #B91C1C; }
+
         .message {
             text-align: center;
-            color: #666;
+            color: #77718B;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
         }
     </style>
 </head>
 
 <body>
+<div class="container">
 
-    <h1>Gestion des étudiants</h1>
+    <h1>Liste des étudiants</h1>
 
-    <div class="form-container">
-        <h2>Ajouter un étudiant</h2>
+    <div class="top-links">
+        <a class="link-button"
+           href="${pageContext.request.contextPath}/dashboard.jsp">
+            ← Tableau de bord
+        </a>
 
-        <form action="<%= request.getContextPath() %>/etudiants"
-              method="post">
-
-            <label>Nom :</label>
-            <input type="text" name="nom" required>
-
-            <label>Prénom :</label>
-            <input type="text" name="prenom" required>
-
-            <label>Email :</label>
-            <input type="email" name="email" required>
-
-            <label>Note (0 - 20) :</label>
-            <input type="number" name="note"
-                   min="0" max="20" step="0.01" required>
-
-            <button type="submit">Ajouter</button>
-        </form>
+        <a class="link-button"
+           href="${pageContext.request.contextPath}/ajouter.jsp">
+            + Ajouter un étudiant
+        </a>
     </div>
 
-    <h2>Liste des étudiants</h2>
+    <div class="search-container">
+        <form action="${pageContext.request.contextPath}/etudiants"
+              method="get">
 
-<form action="<%= request.getContextPath() %>/etudiants"
-      method="get">
+            <input type="text"
+                   name="recherche"
+                   placeholder="Rechercher par nom ou prénom..."
+                   value="<%= request.getAttribute("recherche") != null
+                       ? request.getAttribute("recherche") : "" %>">
 
-    <input
-        type="text"
-        name="recherche"
-        placeholder="Rechercher un étudiant par nom..."
-        value="<%= request.getAttribute("recherche") != null
-            ? request.getAttribute("recherche") : "" %>"
-    >
+            <button type="submit">Rechercher</button>
 
-    <button type="submit">Rechercher</button>
-
-    <a href="<%= request.getContextPath() %>/etudiants">
-        Afficher tous
-    </a>
-</form>
-
+            <a class="link-button"
+               href="${pageContext.request.contextPath}/etudiants">
+                Afficher tous
+            </a>
+        </form>
+    </div>
 
     <%
         List<Etudiant> etudiants =
@@ -126,45 +179,50 @@
         if (etudiants != null && !etudiants.isEmpty()) {
     %>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Email</th>
-            <th>Note</th>
-            <th>Résultat</th>
-            <th>Actions</th>
-        </tr>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Note</th>
+                <th>Résultat</th>
+                <th>Actions</th>
+            </tr>
 
-        <% for (Etudiant e : etudiants) { %>
-        <tr>
-            <td><%= e.getId() %></td>
-            <td><%= e.getNom() %></td>
-            <td><%= e.getPrenom() %></td>
-            <td><%= e.getEmail() %></td>
-            <td><%= e.getNote() %></td>
-            <td><%= e.estAdmis() ? "Admis" : "Non admis" %></td>
+            <% for (Etudiant e : etudiants) { %>
+            <tr>
+                <td><%= e.getId() %></td>
+                <td><%= e.getNom() %></td>
+                <td><%= e.getPrenom() %></td>
+                <td><%= e.getEmail() %></td>
+                <td><%= e.getNote() %></td>
+                <td><%= e.estAdmis() ? "Admis" : "Non admis" %></td>
 
-<td>
-    <a href="<%= request.getContextPath() %>/modifier?id=<%= e.getId() %>">
-        Modifier
-    </a>
+                <td>
+                    <a class="edit-link"
+                       href="${pageContext.request.contextPath}/modifier?id=<%= e.getId() %>">
+                        Modifier
+                    </a>
 
-    <form action="<%= request.getContextPath() %>/supprimer"
-          method="post"
-          style="display:inline;"
-          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?');">
+                    <form action="${pageContext.request.contextPath}/supprimer"
+                          method="post"
+                          style="display:inline;"
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?');">
 
-        <input type="hidden" name="id" value="<%= e.getId() %>">
+                        <input type="hidden" name="id"
+                               value="<%= e.getId() %>">
 
-        <button type="submit">Supprimer</button>
-    </form>
-</td>
-
-        </tr>
-        <% } %>
-    </table>
+                        <button class="delete-button" type="submit">
+                            Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
 
     <%
         } else {
@@ -176,5 +234,6 @@
         }
     %>
 
+</div>
 </body>
 </html>

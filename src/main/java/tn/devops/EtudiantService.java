@@ -70,20 +70,22 @@ public class EtudiantService {
         return true;
     }
 
-    // Rechercher par nom
-    public List<Etudiant> rechercherParNom(String nom) {
+// Rechercher un étudiant par nom ou prénom
+public List<Etudiant> rechercherParNom(String recherche) {
 
-        List<Etudiant> resultat = new ArrayList<>();
+    List<Etudiant> resultat = new ArrayList<>();
 
-        for (Etudiant e : etudiants) {
-            if (e.getNom().toLowerCase()
-                    .contains(nom.toLowerCase())) {
-                resultat.add(e);
-            }
+    String motCle = recherche.toLowerCase().trim();
+
+    for (Etudiant e : etudiants) {
+        if (e.getNom().toLowerCase().contains(motCle)
+                || e.getPrenom().toLowerCase().contains(motCle)) {
+            resultat.add(e);
         }
-
-        return resultat;
     }
+
+    return resultat;
+}
 
 // Nombre total des étudiants
 public int nombreTotal() {

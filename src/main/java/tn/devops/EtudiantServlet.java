@@ -12,13 +12,17 @@ import java.io.IOException;
 @WebServlet("/etudiants")
 public class EtudiantServlet extends HttpServlet {
 
-    private static EtudiantService service;
+private static EtudiantService service;
 
-    @Override
-    public void init() throws ServletException {
+@Override
+public void init() throws ServletException {
+    service = getService();
+}
+
+public static synchronized EtudiantService getService() {
+    if (service == null) {
         service = new EtudiantService();
     }
-public static EtudiantService getService() {
     return service;
 }
     @Override
