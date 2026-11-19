@@ -8,9 +8,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/statistiques")
 public class StatistiquesServlet extends HttpServlet {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(StatistiquesServlet.class.getName());
 
     private EtudiantService service;
 
@@ -21,15 +26,30 @@ public class StatistiquesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-                         throws ServletException, IOException {
+                         HttpServletResponse response) {
 
-        request.setAttribute("total", service.nombreTotal());
-        request.setAttribute("admis", service.nombreAdmis());
-        request.setAttribute("nonAdmis", service.nombreNonAdmis());
-        request.setAttribute("moyenne", service.moyenneGenerale());
+        try {
+            request.setAttribute("total", service.nombreTotal());
+            request.setAttribute("admis", service.nombreAdmis());
+            request.setAttribute("nonAdmis", service.nombreNonAdmis());
+            request.setAttribute("moyenne", service.moyenneGenerale());
 
-        request.getRequestDispatcher("/statistiques.jsp")
-               .forward(request, response);
+            request.getRequestDispatcher("/statistiques.jsp")
+                   .forward(request, response);
+
+        } catch (ServletException | IOException e) {
+
+            LOGGER.log(
+                Level.SEVERE,
+                "Erreur lors de l'affichage des statistiques",
+                e
+            );
+
+            if (!response.isCommitted()) {
+                response.setStatus(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 }

@@ -15,6 +15,9 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.11.4</junit.version>
+        <sonar.coverage.jacoco.xmlReportPaths>
+        ${project.build.directory}/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
 <dependencies>
@@ -26,6 +29,13 @@
         <version>${junit.version}</version>
         <scope>test</scope>
     </dependency>
+<!-- Mockito pour tester les Servlets -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>5.14.2</version>
+    <scope>test</scope>
+</dependency>
 
     <!-- API Servlet pour Tomcat 10 -->
     <dependency>
@@ -58,6 +68,20 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.16</version>
+
+               <executions>
+                  <execution>
+                     <id>prepare-agent</id>
+                      <goals>
+                      <goal>prepare-agent</goal>
+                      </goals>
+                 </execution>
+             </executions>
+           </plugin>
         </plugins>
     </build>
 </project>

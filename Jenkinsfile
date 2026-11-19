@@ -23,16 +23,17 @@ pipeline {
             }
         }
 
-        stage('Tests') {
-            steps {
-                bat 'mvn -B test'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
+  stage('Tests') {
+    steps {
+        bat 'mvn -B test'
+        bat 'mvn -B jacoco:report'
+    }
+    post {
+        always {
+            junit '**/target/surefire-reports/*.xml'
         }
+    }
+}
 
 stage('SonarQube Analysis') {
     steps {

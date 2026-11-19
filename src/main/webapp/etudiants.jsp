@@ -157,11 +157,16 @@
         <form action="${pageContext.request.contextPath}/etudiants"
               method="get">
 
-            <input type="text"
-                   name="recherche"
-                   placeholder="Rechercher par nom ou prénom..."
-                   value="<%= request.getAttribute("recherche") != null
-                       ? request.getAttribute("recherche") : "" %>">
+<label for="recherche">
+    Rechercher un étudiant par nom ou prénom :
+</label>
+
+<input type="text"
+       id="recherche"
+       name="recherche"
+       placeholder="Rechercher par nom ou prénom..."
+       value="<%= request.getAttribute("recherche") != null
+           ? request.getAttribute("recherche") : "" %>">
 
             <button type="submit">Rechercher</button>
 
