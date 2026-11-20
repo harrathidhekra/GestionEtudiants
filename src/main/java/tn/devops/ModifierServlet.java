@@ -1,4 +1,3 @@
-
 package tn.devops;
 
 import jakarta.servlet.ServletException;
@@ -10,14 +9,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @WebServlet("/modifier")
 public class ModifierServlet extends HttpServlet {
 
-    private static final Logger LOGGER =
-            Logger.getLogger(ModifierServlet.class.getName());
 
     private EtudiantService service;
 
@@ -34,7 +29,7 @@ public class ModifierServlet extends HttpServlet {
         String idText = request.getParameter("id");
 
         if (idText == null || idText.isBlank()) {
-            sendErrorSafely(response, 400, "Identifiant obligatoire");
+            ServletResponseUtil.sendErrorSafely(response, 400, "Identifiant obligatoire");
             return;
         }
 
@@ -43,14 +38,14 @@ public class ModifierServlet extends HttpServlet {
         try {
             id = Integer.parseInt(idText);
         } catch (NumberFormatException e) {
-            sendErrorSafely(response, 400, "Identifiant invalide");
+            ServletResponseUtil.sendErrorSafely(response, 400, "Identifiant invalide");
             return;
         }
 
         Etudiant etudiant = service.rechercherParId(id);
 
         if (etudiant == null) {
-            sendErrorSafely(response, 404, "Etudiant introuvable");
+            ServletResponseUtil.sendErrorSafely(response, 404, "Etudiant introuvable");
             return;
         }
 
@@ -61,7 +56,7 @@ public class ModifierServlet extends HttpServlet {
                    .forward(request, response);
 
         } catch (ServletException | IOException e) {
-            handleFailure(response, "Erreur lors de l'affichage de l'étudiant", e);
+            ServletResponseUtil.handleFailure(response, "Erreur lors de l'affichage de l'étudiant", e);
         }
     }
 
@@ -74,7 +69,7 @@ public class ModifierServlet extends HttpServlet {
             request.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         } catch (UnsupportedEncodingException e) {
-            handleFailure(response, "Erreur d'encodage", e);
+            ServletResponseUtil.handleFailure(response, "Erreur d'encodage", e);
             return;
         }
 
@@ -91,7 +86,7 @@ public class ModifierServlet extends HttpServlet {
             if (idText == null || idText.isBlank()
                     || noteText == null || noteText.isBlank()) {
 
-                sendErrorSafely(response, 400, "Identifiant et note obligatoires");
+                ServletResponseUtil.sendErrorSafely(response, 400, "Identifiant et note obligatoires");
                 return;
             }
 
@@ -99,7 +94,7 @@ public class ModifierServlet extends HttpServlet {
             note = Double.parseDouble(noteText);
 
         } catch (NumberFormatException e) {
-            sendErrorSafely(response, 400, "Identifiant ou note invalide");
+            ServletResponseUtil.sendErrorSafely(response, 400, "Identifiant ou note invalide");
             return;
         }
 
@@ -109,7 +104,7 @@ public class ModifierServlet extends HttpServlet {
                 || !Double.isFinite(note)
                 || note < 0 || note > 20) {
 
-            sendErrorSafely(response, 400, "Informations invalides");
+            ServletResponseUtil.sendErrorSafely(response, 400, "Informations invalides");
             return;
         }
 
@@ -118,44 +113,14 @@ public class ModifierServlet extends HttpServlet {
         );
 
         if (!modifie) {
-            sendErrorSafely(response, 404, "Etudiant introuvable");
+            ServletResponseUtil.sendErrorSafely(response, 404, "Etudiant introuvable");
             return;
         }
 
-        sendRedirectSafely(
+        ServletResponseUtil.sendRedirectSafely(
             response,
             request.getContextPath() + "/etudiants"
         );
     }
 
-    private void sendErrorSafely(HttpServletResponse response,
-                                 int status,
-                                 String message) {
-        try {
-            response.sendError(status, message);
-        } catch (IOException e) {
-            handleFailure(response, "Impossible d'envoyer l'erreur HTTP", e);
-        }
-    }
-
-    private void sendRedirectSafely(HttpServletResponse response,
-                                    String url) {
-        try {
-            response.sendRedirect(url);
-        } catch (IOException e) {
-            handleFailure(response, "Impossible d'effectuer la redirection", e);
-        }
-    }
-
-    private void handleFailure(HttpServletResponse response,
-                               String message,
-                               Exception e) {
-        LOGGER.log(Level.SEVERE, message, e);
-
-        if (!response.isCommitted()) {
-            response.setStatus(
-                HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
 }

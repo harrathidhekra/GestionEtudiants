@@ -1,4 +1,3 @@
-
 package tn.devops;
 
 import jakarta.servlet.ServletException;
@@ -10,14 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 @WebServlet("/etudiants")
 public class EtudiantServlet extends HttpServlet {
 
-    private static final Logger LOGGER =
-            Logger.getLogger(EtudiantServlet.class.getName());
 
     private EtudiantService service;
 
@@ -60,7 +56,7 @@ public class EtudiantServlet extends HttpServlet {
                    .forward(request, response);
 
         } catch (ServletException | IOException e) {
-            handleFailure(response, "Erreur lors de l'affichage des étudiants", e);
+            ServletResponseUtil.handleFailure(response, "Erreur lors de l'affichage des étudiants", e);
         }
     }
 
@@ -72,7 +68,7 @@ public class EtudiantServlet extends HttpServlet {
             request.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         } catch (UnsupportedEncodingException e) {
-            handleFailure(response, "Erreur d'encodage de la requête", e);
+            ServletResponseUtil.handleFailure(response, "Erreur d'encodage de la requête", e);
             return;
         }
 
@@ -82,7 +78,7 @@ public class EtudiantServlet extends HttpServlet {
         String noteText = request.getParameter("note");
 
         if (noteText == null || noteText.isBlank()) {
-            sendErrorSafely(
+            ServletResponseUtil.sendErrorSafely(
                 response,
                 HttpServletResponse.SC_BAD_REQUEST,
                 "La note est obligatoire."
@@ -96,7 +92,7 @@ public class EtudiantServlet extends HttpServlet {
             note = Double.parseDouble(noteText);
 
         } catch (NumberFormatException e) {
-            sendErrorSafely(
+            ServletResponseUtil.sendErrorSafely(
                 response,
                 HttpServletResponse.SC_BAD_REQUEST,
                 "La note doit être un nombre."
@@ -110,7 +106,7 @@ public class EtudiantServlet extends HttpServlet {
                 || !Double.isFinite(note)
                 || note < 0 || note > 20) {
 
-            sendErrorSafely(
+            ServletResponseUtil.sendErrorSafely(
                 response,
                 HttpServletResponse.SC_BAD_REQUEST,
                 "Informations invalides."
@@ -120,40 +116,11 @@ public class EtudiantServlet extends HttpServlet {
 
         service.ajouter(nom, prenom, email, note);
 
-        sendRedirectSafely(
+        ServletResponseUtil.sendRedirectSafely(
             response,
             request.getContextPath() + "/etudiants"
         );
     }
 
-    private void sendErrorSafely(HttpServletResponse response,
-                                 int status,
-                                 String message) {
-        try {
-            response.sendError(status, message);
-        } catch (IOException e) {
-            handleFailure(response, "Impossible d'envoyer l'erreur HTTP", e);
-        }
-    }
 
-    private void sendRedirectSafely(HttpServletResponse response,
-                                    String url) {
-        try {
-            response.sendRedirect(url);
-        } catch (IOException e) {
-            handleFailure(response, "Impossible d'effectuer la redirection", e);
-        }
-    }
-
-    private void handleFailure(HttpServletResponse response,
-                               String message,
-                               Exception e) {
-        LOGGER.log(Level.SEVERE, message, e);
-
-        if (!response.isCommitted()) {
-            response.setStatus(
-                HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
 }
