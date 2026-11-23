@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gestionetudiants
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gestionetudiants
+  template:
+    metadata:
+      labels:
+        app: gestionetudiants
+    spec:
+      containers:
+        - name: gestionetudiants
+          image: gestionetudiants:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
