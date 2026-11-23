@@ -14,7 +14,31 @@ spec:
     spec:
       containers:
         - name: gestionetudiants
-          image: gestionetudiants:1.0
+          image: dhekra1/gestionetudiants:1.0
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
+
+          livenessProbe:
+            httpGet:
+              path: /GestionEtudiants/
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+
+          readinessProbe:
+            httpGet:
+              path: /GestionEtudiants/
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 5
+            timeoutSeconds: 5
+
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
